@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NUnit.Framework;
 
 namespace l3
 {
-
 
     public enum Gender { Male, Female }
     class Person
@@ -280,8 +280,8 @@ namespace l3
             Console.WriteLine(mig.Married);
             Console.WriteLine(marie.Married);
 
-            Console.WriteLine(mig);
-
+			Console.WriteLine (mig);
+			Console.WriteLine(marie);
             mig.AddPet(new Persian());
             mig.AddPet(new Persian());
             mig.AddPet(new Savannah());
