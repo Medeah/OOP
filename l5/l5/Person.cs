@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace l5
 {
-    class Person : IComparable<Person>
+    public class Person : IComparable<Person>
     {
         public int Age { get; set; }
         public double Weight { get; set; }

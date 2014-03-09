@@ -23,25 +23,37 @@ namespace QueueTest
         {
             MyQueue<int> queue = new MyQueue<int>(2);
 
+            Assert.IsTrue(queue.IsEmpty);
+            Assert.IsFalse(queue.IsFull);
+
             queue.Enqueue(1);
             Assert.AreEqual(1, queue.Dequeue());
             queue.Enqueue(2);
+
+            Assert.IsFalse(queue.IsFull);
+            Assert.IsFalse(queue.IsEmpty);
+
             queue.Enqueue(3);
+
             Assert.IsTrue(queue.IsFull);
+            Assert.IsFalse(queue.IsEmpty);
+
             Assert.AreEqual(2, queue.Head);
             Assert.AreEqual(3, queue.Tail);
             Assert.AreEqual(2, queue.Dequeue());
             Assert.AreEqual(3, queue.Dequeue());
+
             Assert.IsTrue(queue.IsEmpty);
+            Assert.IsFalse(queue.IsFull);
   
         }
 
         [TestMethod]
         public void MultipleQueueing()
         {
-            MyQueue<int> queue = new MyQueue<int>(22);
+            MyQueue<int> queue = new MyQueue<int>(12);
             queue.Enqueue(1);
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
                 queue.Enqueue(2);
                 queue.Enqueue(3);
@@ -110,9 +122,20 @@ namespace QueueTest
             Assert.IsTrue(sort.IsFull);
             Assert.AreEqual(20, sort.Tail);
             Assert.AreEqual(3, sort.Dequeue());
+            Assert.IsFalse(sort.IsFull);
         }
 
-        //TODO: tesing  persons can be inserted into your MyOrderedQueue
+        [TestMethod]
+        public void OrderedPersons()
+        {
+            MyOrderedQueue<Person> persons = new MyOrderedQueue<Person>(3);
 
+            persons.Enqueue(new Person { Age = 12, Name = "Frederik" });
+            persons.Enqueue(new Person { Age = 8, Name = "Rasmus" });
+
+            StringAssert.Equals("Rasmus", persons.Head);
+            
+            
+        }
     }
 }
