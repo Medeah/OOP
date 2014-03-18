@@ -26,8 +26,6 @@ namespace QueueTest
             Assert.IsTrue(queue.IsEmpty);
             Assert.IsFalse(queue.IsFull);
 
-            queue.Enqueue(1);
-            Assert.AreEqual(1, queue.Dequeue());
             queue.Enqueue(2);
 
             Assert.IsFalse(queue.IsFull);
