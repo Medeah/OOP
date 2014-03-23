@@ -269,16 +269,16 @@ namespace ex3
 
             int storeIndex = left;
             for (int i = left; i < right; i++)
-			{
-			    if (array[i].CompareTo(pivotValue) <= 0)
-	            {
-		            temp = array[i];
+            {
+                if (array[i].CompareTo(pivotValue) <= 0)
+                {
+                    temp = array[i];
                     array[i] = array[storeIndex];
                     array[storeIndex] = temp;
 
                     storeIndex++;
-	            }
-			}
+                }
+            }
 
             temp = array[right];
             array[right] = array[storeIndex];
@@ -300,9 +300,9 @@ namespace ex3
             {
                 int index = list.FindIndex(x => element.CompareTo(x) < 0);
                 if (index == -1)
-	            {
-		            index = list.Count;
-	            }
+                {
+                    index = list.Count;
+                }
                 list.Insert(index, element);
 
                 yield return list;
