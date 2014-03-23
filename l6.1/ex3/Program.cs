@@ -34,6 +34,11 @@ namespace ex3
         // 1
         public static void MyForEach<T>(this IEnumerable<T> source, Action<T> fn)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+                
             foreach (T element in source)
             {
                 fn(element);
@@ -43,6 +48,11 @@ namespace ex3
         //2
         public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, Predicate<T> fn)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             foreach (T element in source)
             {
                 if (fn(element))
@@ -56,6 +66,11 @@ namespace ex3
         public static T MyMax<T>(this IEnumerable<T> source)
             where T : IComparable
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             T max;
 
             using (var enumerator = source.GetEnumerator())
@@ -84,6 +99,11 @@ namespace ex3
         //4
         public static IEnumerable<U> Map<T, U>(this IEnumerable<T> source, Func<T, U> fn)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             foreach (T element in source)
             {
                 yield return fn(element);
@@ -95,6 +115,11 @@ namespace ex3
         public static IEnumerable<T> Sorted<T>(this IEnumerable<T> source)
             where T : IComparable
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             var list = source.ToList();
             for (int i = 0; list.Count > 0; i++)
             {
@@ -111,59 +136,73 @@ namespace ex3
             }
         }
 
-         
 
         // http://en.wikipedia.org/wiki/Quicksort#In-place_version
         public static IEnumerable<T> QSorted<T>(this IEnumerable<T> source)
             where T : IComparable
         {
-            var list = source.ToList();
-            Quicksort(list, 0, list.Count - 1);
-            return list;
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
+            var list = source.ToArray();
+            Quicksort(list, 0, list.Length - 1);
+
+            foreach (var element in list)
+            {
+                yield return element;
+            }
+
         }
 
-        private static void Quicksort<T>(List<T> list, int left, int right)
+        private static void Quicksort<T>(T[] array, int left, int right)
             where T : IComparable
         {
             if (left < right)
             {
                 int pivotIndex = new Random().Next(left, right + 1);
-                int pivotNewIndex = Partition(list, left, right, pivotIndex);
-                Quicksort(list, left, pivotNewIndex - 1);
-                Quicksort(list, pivotNewIndex + 1, right);
+                int pivotNewIndex = Partition(array, left, right, pivotIndex);
+                Quicksort(array, left, pivotNewIndex - 1);
+                Quicksort(array, pivotNewIndex + 1, right);
             }
         }
 
-        private static int Partition<T>(List<T> list, int left, int right, int pivotIndex)
+        private static int Partition<T>(T[] array, int left, int right, int pivotIndex)
             where T : IComparable
         {
-            T pivotValue = list[pivotIndex];
+            T pivotValue = array[pivotIndex];
 
-            T temp = list[pivotIndex];
-            list[pivotIndex] = list[right];
-            list[right] = temp;
+            T temp = array[pivotIndex];
+            array[pivotIndex] = array[right];
+            array[right] = temp;
 
             int storeIndex = left;
             for (int i = left; i < right; i++)
 			{
-			    if (list[i].CompareTo(pivotValue) <= 0)
+			    if (array[i].CompareTo(pivotValue) <= 0)
 	            {
-		            temp = list[i];
-                    list[i] = list[storeIndex];
-                    list[storeIndex] = temp;
+		            temp = array[i];
+                    array[i] = array[storeIndex];
+                    array[storeIndex] = temp;
 
                     storeIndex++;
 	            }
 			}
 
-            temp = list[right];
-            list[right] = list[storeIndex];
-            list[storeIndex] = temp;
+            temp = array[right];
+            array[right] = array[storeIndex];
+            array[storeIndex] = temp;
             return storeIndex;
         }
 
         public static IEnumerable<U> FlatMap<T, U>(this IEnumerable<T> source, Func<T, IEnumerable<U>> fn)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             foreach (T enumerable in source)
             {
                 foreach (U element in fn(enumerable))
@@ -176,6 +215,11 @@ namespace ex3
 
         public static T Reduce<T>(this IEnumerable<T> source, Func<T, T, T> fn)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             T folded;
             using (var enumerator = source.GetEnumerator())
             {
@@ -196,6 +240,11 @@ namespace ex3
 
         public static U Fold<T, U>(this IEnumerable<T> source, U init, Func<U, T, U> fn)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
             foreach (var element in source)
             {
                 init = fn(init, element);
@@ -205,5 +254,6 @@ namespace ex3
         }
 
         // TODO: test sorting, tid
+        // insetion sort
     }
 }
