@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ex3
 {
@@ -11,28 +12,117 @@ namespace ex3
         static void Main(string[] args)
         {
 
-            List<int> numbers = new List<int>();
-            Random r = new Random();
-
-            for (int i = 1; i < 30; i++)
-            {
-                numbers.Add(r.Next(0, 100));
-            }
-
-            numbers.Filter(x => x % 2 == 0)
+            /*numbers.Filter(x => x % 2 == 0)
                 .Map(x => x + 1)
                 .QSorted()
-                .MyForEach((x) => Console.WriteLine(x));
-
+                .ForEach((x) => Console.WriteLine(x));
 
             List<int> num = new List<int>() { -1, -3};
 
-            Console.WriteLine(num.MyMax());
+            Console.WriteLine(num.MyMax());*/
+
+            int[] micro = RandomArray(10);
+            int[] small = RandomArray(100);
+            int[] normal = RandomArray(1000);
+            int[] doubleSize = RandomArray(2000);
+
+            Console.WriteLine("Sorted vs Qsort on increasingly bigger arrays");
+            Console.WriteLine("---------------------------------------------");
+
+            Console.WriteLine("Sorted micro");
+            Time(() =>
+            {
+                var test = micro.Sorted().ToList();
+            });
+
+            Console.WriteLine("Sorted normal");
+            Time(() =>
+            {
+                var test = normal.Sorted().ToList();
+            });
+
+            Console.WriteLine("Sorted doubleSize");
+            Time(() =>
+            {
+                var test = doubleSize.Sorted().ToList();
+            });
+            //Qsort beats ssort at all sizes and qsort scales better with incresing input size
+
+            Console.WriteLine("------------------");
+            Console.WriteLine("QSorted micro");
+            Time(() =>
+            {
+                var test = micro.QSorted().ToList();
+            });
+
+            Console.WriteLine("QSorted normal");
+            Time(() =>
+            {
+                var test = normal.QSorted().ToList();
+            });
+
+            Console.WriteLine("QSorted doubleSize");
+            Time(() =>
+            {
+                var test = doubleSize.QSorted().ToList();
+            });
+            Console.WriteLine();
+            Console.WriteLine("Sorted vs Qsort only taking first 5 elements");
+            Console.WriteLine("--------------------------------------------");
+
+            Console.WriteLine("Sorted normal");
+            Time(() =>
+            {
+                var test = normal.Sorted().Take(5).ToList();
+            });
+
+            Console.WriteLine("QSorted normal");
+            Time(() =>
+            {
+                var test = normal.QSorted().Take(5).ToList();
+            });
+
+            Console.WriteLine("Sorted normal only first");
+            Time(() =>
+            {
+                var test = normal.Sorted().First();
+            });
+
+            Console.WriteLine("QSorted normal  only first");
+            Time(() =>
+            {
+                var test = normal.QSorted().First();
+            });
+            // ssort is faster since getting the first k elements is O(n)
+
             Console.ReadLine();
         }
 
+        static void Time(Action fn) {
+            var timer = Stopwatch.StartNew();
+            
+            for (int i = 0; i < 20; i++)
+            {
+                fn();
+            }
+            timer.Stop();
+            Console.WriteLine("Time elapsed: {0}", timer.Elapsed);
+        }
+        static int[] RandomArray(int size)
+        {
+            int[] numbers = new int[size];
+
+            Random randNum = new Random();
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                numbers[i] = randNum.Next(int.MinValue, int.MaxValue);
+            }
+
+            return numbers;
+        }
+
         // 1
-        public static void MyForEach<T>(this IEnumerable<T> source, Action<T> fn)
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> fn)
         {
             if (source == null)
             {
@@ -146,14 +236,14 @@ namespace ex3
                 throw new ArgumentNullException("source");
             }
 
-            var list = source.ToArray();
-            Quicksort(list, 0, list.Length - 1);
+            var array = source.ToArray();
+            Quicksort(array, 0, array.Length - 1);
 
-            foreach (var element in list)
+            foreach (var element in array)
             {
                 yield return element;
             }
-
+            //return list;
         }
 
         private static void Quicksort<T>(T[] array, int left, int right)
@@ -194,6 +284,30 @@ namespace ex3
             array[right] = array[storeIndex];
             array[storeIndex] = temp;
             return storeIndex;
+        }
+
+        // mostly for fun
+        public static IEnumerable<IEnumerable<T>> ISorted<T>(this IEnumerable<T> source)
+            where T : IComparable
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
+
+            var list = new List<T>();
+            foreach (var element in source)
+            {
+                int index = list.FindIndex(x => element.CompareTo(x) < 0);
+                if (index == -1)
+	            {
+		            index = list.Count;
+	            }
+                list.Insert(index, element);
+
+                yield return list;
+            }
+
         }
 
         public static IEnumerable<U> FlatMap<T, U>(this IEnumerable<T> source, Func<T, IEnumerable<U>> fn)
@@ -252,8 +366,5 @@ namespace ex3
 
             return init;
         }
-
-        // TODO: test sorting, tid
-        // insetion sort
     }
 }
