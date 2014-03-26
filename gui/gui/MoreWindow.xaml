@@ -1,0 +1,13 @@
+﻿<Window x:Class="gui.MoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MoreWindow" Height="300" Width="300">
+    <StackPanel Name="sPanel">
+        <Button Content="Button"/>
+        <Button Content="Button"/>
+        <Button Content="Button"/>
+        <Button Content="Button"/>
+        <Button Content="Flip it!" Click="Button_Click"/>
+    </StackPanel>
+
+</Window>
