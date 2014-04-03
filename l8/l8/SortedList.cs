@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace l8
 {
     class SortedList<T> : ICollection<T>
         where T : IComparable<T>
     {
-        private List<T> data = new List<T>();
+        private readonly List<T> _data = new List<T>();
 
         public T this[int index]
         {
             get
             {
-                return data[index];
+                return _data[index];
             }
         }
 
@@ -33,32 +30,29 @@ namespace l8
 
         public void Add(T item)
         {
-            int index = this.data.FindIndex(x => x.CompareTo(item) > 0);
-            if (index == -1)
-            {
-                index = data.Count;
-            }
-            data.Insert(index, item);
+            var index = _data.FindIndex(x => x.CompareTo(item) > 0);
+            index = index == -1 ? _data.Count : index;
+            _data.Insert(index, item);
         }
 
         public void Clear()
         {
-            data.Clear();
+            _data.Clear();
         }
 
         public bool Contains(T item)
         {
-            return data.Contains(item);
+            return _data.Contains(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            data.CopyTo(array, arrayIndex);
+            _data.CopyTo(array, arrayIndex);
         }
 
         public int Count
         {
-            get{ return data.Count; }
+            get{ return _data.Count; }
         }
 
         public bool IsReadOnly
@@ -68,12 +62,12 @@ namespace l8
 
         public bool Remove(T item)
         {
-            return data.Remove(item);
+            return _data.Remove(item);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (var item in data)
+            foreach (var item in _data)
             {
                 yield return item;
             }
@@ -82,15 +76,15 @@ namespace l8
         // Exercises says it must return a enumerator, but it is used like a enumarable
         public IEnumerable<T> GetElementsReversed()
         {
-            for (int i = data.Count -1; i >= 0; i--)
+            for (int i = _data.Count -1; i >= 0; i--)
             {
-                yield return data[i];
+                yield return _data[i];
             }
         }
 
         public IEnumerable<T> GetElements(Predicate<T> fn)
         {
-            foreach (var item in data)
+            foreach (var item in _data)
             {
                 if (fn(item))
                 {
