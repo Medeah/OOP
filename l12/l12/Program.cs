@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace l12
 {
@@ -21,6 +22,26 @@ namespace l12
                 Console.WriteLine(em.Income);
             }
             x.Accept(san);
+
+            var y = new Dfa();
+            y.Input = "001";
+            Debug.Assert(y.Check());
+            y.Input = "11100111";
+            Debug.Assert(y.Check());
+            y.Input = "0000000001";
+            Debug.Assert(y.Check());
+            y.Input = "0011110";
+            Debug.Assert(y.Check());
+            y.Input = "101";
+            Debug.Assert(!y.Check());
+            y.Input = "01";
+            Debug.Assert(!y.Check());
+            y.Input = "";
+            Debug.Assert(!y.Check());
+            y.Input = "0101010100";
+            Debug.Assert(!y.Check());
+
+
             Console.ReadLine();
         }
     }
@@ -172,6 +193,122 @@ namespace l12
         public override void Accept(IVisitor visitor)
         {
             visitor.Visit(this);
+        }
+    }
+
+    class Dfa
+    {
+        public readonly IDfaState q0;
+        public readonly IDfaState q1;
+        public readonly IDfaState q2;
+        public readonly IDfaState q3;
+
+        public Dfa()
+        {
+            q0 = new q0(this);
+            q1 = new q1(this);
+            q2 = new q2(this);
+            q3 = new q3(this);
+        }
+
+        public IDfaState State { get; set; }
+
+        // ingen check af input
+        public string Input { get; set; }
+
+        public bool Check()
+        {
+            State = q0;
+            foreach (var c in Input)
+                if (c == '0')
+                    State.Zero();
+                else
+                    State.One();
+
+            return State == q3;
+        }
+    }
+
+    interface IDfaState
+    {
+        void One();
+        void Zero();
+    }
+
+    class q0 : IDfaState
+    {
+        private Dfa _dfa;
+
+        public q0(Dfa dfa)
+        {
+            _dfa = dfa;
+        }
+
+        public void One()
+        {
+            _dfa.State = _dfa.q0;
+        }
+
+        public void Zero()
+        {
+            _dfa.State = _dfa.q1;
+        }
+    }
+    class q1 : IDfaState
+    {
+        private Dfa _dfa;
+
+        public q1(Dfa dfa)
+        {
+            _dfa = dfa;
+        }
+
+        public void One()
+        {
+            _dfa.State = _dfa.q0;
+        }
+
+        public void Zero()
+        {
+            _dfa.State = _dfa.q2;
+        }
+    }
+    class q2 : IDfaState
+    {
+        private Dfa _dfa;
+
+        public q2(Dfa dfa)
+        {
+            _dfa = dfa;
+        }
+
+        public void One()
+        {
+            _dfa.State = _dfa.q3;
+        }
+
+        public void Zero()
+        {
+            _dfa.State = _dfa.q2;
+        }
+    }
+    class q3 : IDfaState
+    {
+        private Dfa _dfa;
+
+        public q3(Dfa dfa)
+        {
+            _dfa = dfa;
+        }
+
+        public void One()
+        {
+            _dfa.State = _dfa.q3;
+        }
+
+        public void Zero()
+        {
+            _dfa.State = _dfa.q3;
         }
     }
 }
