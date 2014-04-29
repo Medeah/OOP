@@ -198,17 +198,17 @@ namespace l12
 
     class Dfa
     {
-        public readonly IDfaState q0;
-        public readonly IDfaState q1;
-        public readonly IDfaState q2;
-        public readonly IDfaState q3;
+        public readonly IDfaState Q0;
+        public readonly IDfaState Q1;
+        public readonly IDfaState Q2;
+        public readonly IDfaState Q3;
 
         public Dfa()
         {
-            q0 = new q0(this);
-            q1 = new q1(this);
-            q2 = new q2(this);
-            q3 = new q3(this);
+            Q0 = new Q0(this);
+            Q1 = new Q1(this);
+            Q2 = new Q2(this);
+            Q3 = new Q3(this);
         }
 
         public IDfaState State { get; set; }
@@ -218,14 +218,14 @@ namespace l12
 
         public bool Check()
         {
-            State = q0;
+            State = Q0;
             foreach (var c in Input)
                 if (c == '0')
                     State.Zero();
                 else
                     State.One();
 
-            return State == q3;
+            return State == Q3;
         }
     }
 
@@ -235,80 +235,80 @@ namespace l12
         void Zero();
     }
 
-    class q0 : IDfaState
+    class Q0 : IDfaState
     {
-        private Dfa _dfa;
+        private readonly Dfa _dfa;
 
-        public q0(Dfa dfa)
+        public Q0(Dfa dfa)
         {
             _dfa = dfa;
         }
 
         public void One()
         {
-            _dfa.State = _dfa.q0;
+            _dfa.State = _dfa.Q0;
         }
 
         public void Zero()
         {
-            _dfa.State = _dfa.q1;
+            _dfa.State = _dfa.Q1;
         }
     }
-    class q1 : IDfaState
+    class Q1 : IDfaState
     {
-        private Dfa _dfa;
+        private readonly Dfa _dfa;
 
-        public q1(Dfa dfa)
+        public Q1(Dfa dfa)
         {
             _dfa = dfa;
         }
 
         public void One()
         {
-            _dfa.State = _dfa.q0;
+            _dfa.State = _dfa.Q0;
         }
 
         public void Zero()
         {
-            _dfa.State = _dfa.q2;
+            _dfa.State = _dfa.Q2;
         }
     }
-    class q2 : IDfaState
+    class Q2 : IDfaState
     {
-        private Dfa _dfa;
+        private readonly Dfa _dfa;
 
-        public q2(Dfa dfa)
+        public Q2(Dfa dfa)
         {
             _dfa = dfa;
         }
 
         public void One()
         {
-            _dfa.State = _dfa.q3;
+            _dfa.State = _dfa.Q3;
         }
 
         public void Zero()
         {
-            _dfa.State = _dfa.q2;
+            _dfa.State = _dfa.Q2;
         }
     }
-    class q3 : IDfaState
+    class Q3 : IDfaState
     {
-        private Dfa _dfa;
+        private readonly Dfa _dfa;
 
-        public q3(Dfa dfa)
+        public Q3(Dfa dfa)
         {
             _dfa = dfa;
         }
 
         public void One()
         {
-            _dfa.State = _dfa.q3;
+            _dfa.State = _dfa.Q3;
         }
 
         public void Zero()
         {
-            _dfa.State = _dfa.q3;
+            _dfa.State = _dfa.Q3;
         }
     }
 }
