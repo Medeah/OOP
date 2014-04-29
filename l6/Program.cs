@@ -17,7 +17,7 @@ namespace l6
 				randomNum = r.Next(0, 100); //random number between 0 and 100
 				numbers.Add(randomNum);
 			}
-			int outer = 3;
+			//int outer = 3;
 			/*
 			foreach (var x in numbers.Where ((x) => x % outer == 0)) {
 				Console.WriteLine (x);
